@@ -1,9 +1,11 @@
 import argparse
+import io
 import os
 import sys
 
 import nibabel as nib
 import pandas as pd
+import requests
 from nilearn.datasets import fetch_atlas_schaefer_2018
 
 from wheres_waldo import __version__
@@ -146,7 +148,15 @@ def wheres_waldo(
         f"{gh_url}/Schaefer2018_{n_parcels}Parcels_{n_networks}Networks_order_FSLMNI152_1mm"
         f".Centroid_RAS.csv"
     )
-    schaefer_info = pd.read_csv(csv_file, error_bad_lines=False)
+
+    # Download csv_file
+    download = requests.get(csv_file).content
+
+    # Reading the downloaded content and turning it into a pandas dataframe
+    schaefer_info = pd.read_csv(io.StringIO(download.decode("utf-8")))
+
+    # breakpoint()
+    # schaefer_info = pd.read_csv(csv_file, error_bad_lines=False)
 
     # Load Schaefer atlas from nilearn
     print("Loading Schaefer atlas...")

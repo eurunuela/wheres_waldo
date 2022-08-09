@@ -43,13 +43,17 @@ def load_dset(out_dir, dset_fn):
             print("Loading Neurosynth data...")
             dset = Dataset.load(os.path.join(out_dir, dset_fn))
         else:
-            print("Downloading Neurosynth data...")
+            print(f"Could not find {dset_fn}. Downloading Neurosynth data...")
             dset = neurosynth_to_nimare(out_dir)
             dset.save(os.path.join(out_dir, "neurosynth_dataset.pkl.gz"))
     elif os.path.exists(os.path.join(out_dir, "neurosynth_dataset.pkl.gz")):
         print("Found Neurosynth data on output directory")
         print("Loading Neurosynth data...")
         dset = Dataset.load(os.path.join(out_dir, "neurosynth_dataset.pkl.gz"))
+    else:
+        print("Downloading Neurosynth data...")
+        dset = neurosynth_to_nimare(out_dir)
+        dset.save(os.path.join(out_dir, "neurosynth_dataset.pkl.gz"))
     return dset
 
 
